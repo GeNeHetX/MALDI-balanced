@@ -3,6 +3,7 @@ FROM rocker/tidyverse:4.4.1
 # Install some dependencies
 RUN apt-get update 
 RUN apt-get install -y --no-install-recommends \
+    libfftw3-dev \
     libtiff-dev \
     r-cran-irkernel
 
@@ -17,5 +18,4 @@ USER $USERNAME
 
 # # Install some R packages
 RUN Rscript -e "install.packages(c('languageserver','devtools','IRkernel','rlist','pheatmap','BiocManager'), repos='https://cloud.r-project.org', dependencies = TRUE)" 
-RUN Rscript -e "BiocManager::install(c('DESeq2','apeglm','DEGreport'), dependencies = TRUE)"
 RUN Rscript -e "BiocManager::install(c('Cardinal','CardinalWorkflows'), dependencies = TRUE)"

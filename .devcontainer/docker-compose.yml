@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   python_service:
     build:
       context: .
