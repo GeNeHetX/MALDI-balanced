@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  python_service:
+    build:
+      context: .
+      dockerfile: Dockerfile_Python
+    volumes:
+      - ..:/workspace
+      - /home/ahmed/Data:/workspace/data
+      - /mnt/hdd/Data:/workspace/data_hdd
+      - /home/ahmed/QP-projects:/workspace/qp-projects
+    command: sleep infinity
+
+  r_service:
+    build:
+      context: .
+      dockerfile: Dockerfile_R
+    volumes:
+      - ..:/workspace
+      - /home/ahmed/Data:/workspace/data
+      - /mnt/hdd/Data:/workspace/data_hdd
+      - /home/ahmed/QP-projects:/workspace/qp-projects
+    command: sleep infinity
