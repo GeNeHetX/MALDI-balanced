@@ -17,5 +17,5 @@ RUN apt-get install -y sudo \
 USER $USERNAME
 
 # # Install some R packages
-RUN Rscript -e "install.packages(c('languageserver','devtools','IRkernel','rlist','pheatmap','BiocManager'), repos='https://cloud.r-project.org', dependencies = TRUE)" 
+RUN Rscript -e "install.packages(c('languageserver','devtools','IRkernel','rlist','pheatmap','feather','BiocManager'), repos='https://cloud.r-project.org', dependencies = TRUE)" 
 RUN Rscript -e "BiocManager::install(c('Cardinal','CardinalWorkflows'), dependencies = TRUE)"

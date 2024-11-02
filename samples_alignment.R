@@ -70,9 +70,10 @@ for (lame in lames) {
                 filterFreq = config$filtered_frequency,
                 BPPARAM = MulticoreParam())
 
-  # Change the pixel date of the reference peaks to the densities peaks
+  # If the densities file exists, Add the densities to pixel data
   if (file.exists(sprintf("%s/%s/results/mse_ref.imzML",
                           config$path_to_data, lame))) {
+    # Change the pixel data
     pData(mse_ref) <- readMSIData(sprintf("%s/%s/results/mse_densities.imzML",
                                           config$path_to_data, lame)) |>
       pData()
@@ -82,25 +83,3 @@ for (lame in lames) {
   writeMSIData(mse_ref, sprintf("%s/%s/results/mse_ref.imzML",
                                 config$path_to_data, lame))
 }
-
-# Load the the first reference mse
-mse_conc <- readMSIData(sprintf("%s/%s/results/mse_ref.imzML",
-                                config$path_to_data, lames[1]))
-
-# Change the centroided attribute to TRUE
-centroided(mse_conc) <- TRUE
-
-for (lame in lames[2:length(lames)]) {
-  # Load the reference mse
-  mse_ref <- readMSIData(sprintf("%s/%s/results/mse_ref.imzML",
-                                 config$path_to_data, lame))
-
-  # Change the centroided attribute to TRUE
-  centroided(mse_ref) <- TRUE
-
-  # Concatenate the reference mse
-  mse_conc <- cbind(mse_conc, mse_ref)
-}
-
-# Save the concatenated reference mse
-writeMSIData(mse_conc, "data/mse_concatenated.imzML")
