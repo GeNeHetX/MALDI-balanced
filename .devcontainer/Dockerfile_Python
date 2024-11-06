@@ -1,5 +1,13 @@
 FROM python:3.12.5-bookworm
 
+# Update and install required packages
+RUN apt-get update && apt-get install -q -y --no-install-recommends \
+    libglu1-mesa-dev \
+    libgomp1 \
+    libopenslide-dev\
+    openslide-tools\
+    python3-openslide
+
 # Add user so we don't need to run VS Code as root
 ARG USERNAME=vscode
 ARG USER_UID=1000

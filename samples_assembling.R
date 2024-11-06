@@ -12,8 +12,9 @@ centroided(mse_conc) <- TRUE
 
 # Clean the pixels
 mse_conc <- mse_conc |>
-  subsetPixels(Density_Lesion > 0.5,  # Filter the pixels out of the lesion
-               Density_Defects < 0.1)  # Filter the pixels with defects
+  subsetPixels(Density_Defects < 0.1)  # Filter the pixels with defects
+  # subsetPixels(Density_Lesion > 0.5,  # Filter the pixels out of the lesion
+  #              Density_Defects < 0.1)  # Filter the pixels with defects
 
 for (lame in lames[2:length(lames)]) {
   # Load the reference mse
@@ -24,15 +25,16 @@ for (lame in lames[2:length(lames)]) {
 
   # Clean the pixels
   mse_ref <- mse_ref |>
-    subsetPixels(Density_Lesion > 0.5,  # Filter the pixels out of the lesion
-                 Density_Defects < 0.1)  # Filter the pixels with defects
+    subsetPixels(Density_Defects < 0.1)  # Filter the pixels with defects
+    # subsetPixels(Density_Lesion > 0.5,  # Filter the pixels out of the lesion
+    #              Density_Defects < 0.1)  # Filter the pixels with defects
 
   # Concatenate the reference mse
   mse_conc <- cbind(mse_conc, mse_ref)
 }
 
 # Save the concatenated reference mse
-writeMSIData(mse_conc, "data/mse_conc.imzML")
+writeMSIData(mse_conc, "data/mse_conc_complete.imzML")
 
 # Load the pixels into memory
 pixels <- pData(mse_conc) |>
@@ -41,7 +43,7 @@ pixels <- pData(mse_conc) |>
 # Save the pixels as a feather file
 pData(mse_conc) |>
   as.data.frame() |>
-  write_feather("data/mse_conc_pixels.feather")
+  write_feather("data/mse_conc_pixels_complete.feather")
 
 # Load the peaks with the intensity values to 3 decimal into memeory
 peaks <- spectra(mse_conc) |>
@@ -56,4 +58,4 @@ rownames(peaks) <- mz(mse_conc) |>
 peaks |>
   t() |> # Transpose the matrix
   as.data.frame() |> # Convert to a data frame
-  write_feather("data/mse_conc_peaks.feather")
+  write_feather("data/mse_conc_peaks_complete.feather")

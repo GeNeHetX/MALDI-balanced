@@ -1,4 +1,35 @@
 # This is the configuration file for the pipeline
 
 lame: 12AG01290_19  # Name of the sample
-path_to_data: workspace/data  # Path to the data directory excluding the sample name
+path_to_data: workspace/data_hdd # Path to the data directory excluding the sample name
+
+
+#####################
+## MALDI-MSI peaks ##
+#####################
+
+# This is the configuration for the MALDI pipeline
+# The mse.imzml, mse.ibd, mse.mis and coord.csv should be in the directory (path_to_data)/(lame)/maldi/
+
+# Parameters for normalization
+normalization_method: rms  # Method for normalization (tic: Total iones counts)
+
+# Base line reduction
+base_line_method: median  # Method for base line reduction
+
+# Parameters for peak picking
+peak_pick_method: cwt  # Method for peak picking (cwt: continuous wavelet transform)
+signal_to_noise: 3  # Signal to noise ratio
+units: mz  # Units for the tolerance
+
+# Parameters for peak alignment 
+peak_pick_tolerance: 0.25  # Tolerance for the alignment
+clustering_tolerance: 0.2  # Tolerance for the clustering
+plot_selected_peaks: True  # Whether to plot the detected peaks or not
+
+# Parameters for peak filtering
+filtered_frequency: True  # Frequency (True means remove singleton peaks)
+
+# Parameters for pixels geojson
+plot_pixels_and_contour: True  # Whether to plot the pixels and the contour
+plot_compression: 1000  # Compression factor for the plot

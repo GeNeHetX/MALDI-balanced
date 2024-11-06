@@ -1,7 +1,9 @@
+openslide-python
 xgboost
 scikit-learn
 scikit-image
 seaborn
 imagecodecs
 pyaml
+pyarrow
 ipykernel
