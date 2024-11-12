@@ -1,7 +1,12 @@
+# Files
+*.csv
+*.yml
+
 # Data
 data
 data_hdd
 qp-projects
+models
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
