@@ -6,4 +6,6 @@ seaborn
 imagecodecs
 pyaml
 pyarrow
+kneed
+combat
 ipykernel
