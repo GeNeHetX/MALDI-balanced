@@ -57,11 +57,15 @@ for (lame in lames) {
   print(lame)
 
   # Load the processed peaks imzml file
-  mse_processed <- readMSIData(sprintf("%s/%s/results/mse_processed.imzML",
-                                       config$path_to_data, lame))
+  # mse_processed <- readMSIData(sprintf("%s/%s/results/mse_processed.imzML",
+  #                                      config$path_to_data, lame))
+
+  # Load the original peaks imzml file
+  mse <- readMSIData(sprintf("%s/%s/maldi/mse.imzML",
+                             config$path_to_data, lame))
 
   # Detect the peaks in the processed data with the reference
-  mse_ref <- mse_processed |>
+  mse_ref <- mse |>
     peakProcess(ref = reference,
                 method = config$peak_pick_method,
                 SNR = config$signal_to_noise,
@@ -82,4 +86,26 @@ for (lame in lames) {
   # Save the detected peaks with the reference
   writeMSIData(mse_ref, sprintf("%s/%s/results/mse_ref.imzML",
                                 config$path_to_data, lame))
+
+  # Save the pixels as a feather file
+  pData(mse_ref) |>
+    as.data.frame() |>
+    write_feather(sprintf("%s/%s/results/mse_pixels.feather",
+                          config$path_to_data, lame))
+
+  # Load the peaks with the intensity values to 3 decimal into memeory
+  peaks_ref <- spectra(mse_ref) |>
+    as.matrix() |>
+    round(3)
+
+  # Change the row names to the m/z values
+  rownames(peaks_ref) <- mz(mse_ref) |>
+    round(4)
+
+  # Save the peaks as a feather file
+  peaks_ref |>
+    t() |> # Transpose the matrix
+    as.data.frame() |> # Convert to a data frame
+    write_feather(sprintf("%s/%s/results/mse_peaks_ref.feather",
+                          config$path_to_data, lame))
 }
