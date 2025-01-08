@@ -8,4 +8,5 @@ pyaml
 pyarrow
 kneed
 combat
+openpyxl
 ipykernel
