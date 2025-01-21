@@ -1,4 +1,5 @@
 library(Cardinal)
+library(feather)
 library(yaml)
 
 # Read the hyperparameters from the config file
@@ -49,7 +50,7 @@ print(sprintf("Number of the reference peaks: %d", length(reference)))
 # Save the reference peaks to a file
 write.csv(reference, file = "reference_peaks.csv", row.names = FALSE)
 
-# load the reference peaks
+# # load the reference peaks
 # reference <- read.csv("reference_peaks.csv")$x
 
 for (lame in lames) {
@@ -57,15 +58,11 @@ for (lame in lames) {
   print(lame)
 
   # Load the processed peaks imzml file
-  # mse_processed <- readMSIData(sprintf("%s/%s/results/mse_processed.imzML",
-  #                                      config$path_to_data, lame))
-
-  # Load the original peaks imzml file
-  mse <- readMSIData(sprintf("%s/%s/maldi/mse.imzML",
-                             config$path_to_data, lame))
+  mse_processed <- readMSIData(sprintf("%s/%s/results/mse_processed.imzML",
+                                       config$path_to_data, lame))
 
   # Detect the peaks in the processed data with the reference
-  mse_ref <- mse |>
+  mse_ref <- mse_processed |>
     peakProcess(ref = reference,
                 method = config$peak_pick_method,
                 SNR = config$signal_to_noise,
@@ -75,37 +72,48 @@ for (lame in lames) {
                 BPPARAM = MulticoreParam())
 
   # If the densities file exists, Add the densities to pixel data
-  if (file.exists(sprintf("%s/%s/results/mse_ref.imzML",
+  if (file.exists(sprintf("%s/%s/results/mse_densities.imzML",
                           config$path_to_data, lame))) {
     # Change the pixel data
+    print("Adding the densities to the pixel data of the reference")
     pData(mse_ref) <- readMSIData(sprintf("%s/%s/results/mse_densities.imzML",
                                           config$path_to_data, lame)) |>
       pData()
   }
 
   # Save the detected peaks with the reference
+  print("Saving the detected peaks with the reference")
   writeMSIData(mse_ref, sprintf("%s/%s/results/mse_ref.imzML",
                                 config$path_to_data, lame))
 
   # Save the pixels as a feather file
+  print("Saving the pixels as a feather file")
   pData(mse_ref) |>
     as.data.frame() |>
     write_feather(sprintf("%s/%s/results/mse_pixels.feather",
                           config$path_to_data, lame))
 
   # Load the peaks with the intensity values to 3 decimal into memeory
+  print("Loading the peaks with the intensity values to 3 decimal into memory")
   peaks_ref <- spectra(mse_ref) |>
     as.matrix() |>
     round(3)
 
   # Change the row names to the m/z values
+  print("Changing the row names to the m/z values")
   rownames(peaks_ref) <- mz(mse_ref) |>
     round(4)
 
   # Save the peaks as a feather file
+  print("Saving the peaks as a feather file")
   peaks_ref |>
     t() |> # Transpose the matrix
     as.data.frame() |> # Convert to a data frame
     write_feather(sprintf("%s/%s/results/mse_peaks_ref.feather",
                           config$path_to_data, lame))
+
+  # Remove the data from the memory
+  print("Removing the data from the memory")
+  rm(mse_ref, peaks_ref, mse_processed)
+  gc()
 }
