@@ -2,12 +2,15 @@ import numpy as np
 import pandas as pd
 import os
 
+path = 'data_hdd/'
+path_results = 'data/MALDI_IHC/correlations/'
+
 # Extract the lames
-lames = sorted(os.listdir("data_hdd/"))
+lames = sorted(os.listdir(path))
 
 # Load and concatenate the datasets
-peaks = pd.concat([pd.read_feather(f"data_hdd/{lame}/results/mse_peaks_ref.feather").astype('float32') for lame in lames])
-pixels = pd.concat([pd.read_feather(f"data_hdd/{lame}/results/mse_pixels.feather") for lame in lames])
+peaks = pd.concat([pd.read_feather(f"{path}{lame}/results/mse_peaks_ref_corr.feather").astype('float32') for lame in lames])
+pixels = pd.concat([pd.read_feather(f"{path}{lame}/results/mse_pixels_corr.feather") for lame in lames])
 
 # Reset the index
 peaks.reset_index(drop=True, inplace=True)
@@ -28,6 +31,6 @@ pixels = pixels.astype({col: 'float32' for col in pixels.columns if pixels[col].
 microdissections = microdissections.astype('float32')
 
 # Save the dataframes as pickle files
-peaks.to_pickle('data/MALDI_IHC/peaks.pkl')
-pixels.to_pickle('data/MALDI_IHC/pixels.pkl')
-microdissections.to_pickle('data/MALDI_IHC/microdissections.pkl')
+peaks.to_pickle(f'{path_results}peaks.pkl')
+pixels.to_pickle(f'{path_results}pixels.pkl')
+microdissections.to_pickle(f'{path_results}microdissections.pkl')
