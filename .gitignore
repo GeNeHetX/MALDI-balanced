@@ -1,10 +1,12 @@
 # Files
 *.csv
 *.yml
+*.png
 
 # Data
 data
 data_hdd
+data_external
 qp-projects
 models
 

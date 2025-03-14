@@ -15,9 +15,11 @@ sns.set_theme(style="darkgrid")
 # Increase the limit of allowed images size
 PIL.Image.MAX_IMAGE_PIXELS = 10e10
 
+# Define the path to the data
+path = 'data_external'
 
 # List the lames
-lames = sorted(os.listdir('data_hdd'))
+lames = sorted(os.listdir(f'{path}'))
 
 # Create an empty list to store the data
 data = []
@@ -27,14 +29,12 @@ for lame in lames:
     print(lame)
 
     # Read the density masks
-    densities = sorted([mask for mask in os.listdir(f'data_hdd/{lame}/results/masks')
+    densities = sorted([mask for mask in os.listdir(f'{path}/{lame}/results/masks')
                         if 'microdissection' not in mask
-                            and 'compressed' not in mask
-                            and 'Lesion' not in mask
-                            and 'Defects' not in mask])
+                            and 'compressed' not in mask])
 
     # Read the microdissection masks
-    microdissections = sorted([mask for mask in os.listdir(f'data_hdd/{lame}/results/masks')
+    microdissections = sorted([mask for mask in os.listdir(f'{path}/{lame}/results/masks')
                                if 'microdissection' in mask
                                    and 'compressed' not in mask])
 
@@ -43,14 +43,14 @@ for lame in lames:
         print(microdissection)
         
         # Load the microdissection mask image
-        microdissection_mask = io.imread(f'data_hdd/{lame}/results/masks/{microdissection}')
+        microdissection_mask = io.imread(f'{path}/{lame}/results/masks/{microdissection}')
         
         # Loop over the densities
         for density in densities:
             print(density)
             
             # Load the density mask image
-            density_mask = io.imread(f'data_hdd/{lame}/results/masks/{density}')
+            density_mask = io.imread(f'{path}/{lame}/results/masks/{density}')
             
             # Compute the density under the microdissection
             density_under_microdissection = np.sum(microdissection_mask * density_mask) / np.sum(microdissection_mask)
