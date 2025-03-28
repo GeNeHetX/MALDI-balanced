@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-path = 'data_hdd/'
+path = 'data_external/'
 
 # Extract the lames
 lames = sorted(os.listdir(path))

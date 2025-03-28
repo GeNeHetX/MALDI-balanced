@@ -34,7 +34,6 @@ write.csv(reference, file = "reference_peaks_corr.csv", row.names = FALSE)
 # reference <- read.csv("reference_peaks_corr.csv")$x
 
 for (lame in lames) {
-  # print the lame
   print(lame)
 
   # Load the processed peaks imzml file

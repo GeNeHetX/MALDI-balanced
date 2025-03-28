@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
-path = 'data_hdd/'
+path = 'data_external/'
 path_results = 'data/MALDI_IHC/correlations/'
 
 # Extract the lames
@@ -10,7 +10,7 @@ lames = sorted(os.listdir(path))
 
 # Load and concatenate the datasets
 peaks = pd.concat([pd.read_feather(f"{path}{lame}/results/mse_peaks_ref_corr.feather").astype('float32') for lame in lames])
-pixels = pd.concat([pd.read_feather(f"{path}{lame}/results/mse_pixels_corr.feather") for lame in lames])
+pixels = pd.concat([pd.read_feather(f"{path}{lame}/results/mse_pixels.feather") for lame in lames])
 
 # Reset the index
 peaks.reset_index(drop=True, inplace=True)
