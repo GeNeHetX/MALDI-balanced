@@ -9,6 +9,7 @@ data_hdd
 data_external
 qp-projects
 models
+models_old
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
