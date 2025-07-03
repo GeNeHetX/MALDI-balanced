@@ -223,3 +223,24 @@ def match_protein_peptide_map(protein_peptide_map: dict, match_list: np.ndarray,
                 updated_map[protein][i] = str(mz_values.values[np.argmin(np.abs(mz_values - float(mz)))])
 
     return updated_map
+
+
+def count_with_tolerance(reference: np.ndarray, numbers: np.ndarray, tolerance: float = 0.1) -> np.ndarray:
+    """
+    Count how many numbers in the `numbers` array are within a specified `tolerance` of each value in the `reference` array.
+        Args:
+        reference (np.ndarray): An array of reference values (e.g., peptide masses).
+        numbers (np.ndarray): An array of numbers to compare against the reference values.
+        tolerance (float): The tolerance within which to count matches.
+
+    Returns:
+        np.ndarray: An array of counts, where each count corresponds to how many numbers are within the specified tolerance of each reference value.
+    """
+    counts = []
+    for ref_val in reference:
+        count = 0
+        for num in numbers:
+            if abs(ref_val - num) <= tolerance:
+                count += 1
+        counts.append(count)
+    return np.array(counts)
